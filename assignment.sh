@@ -58,9 +58,9 @@ saveDailyData() {
         echo "Meta Data"
         echo "Information: $information | Symbol: $sym | Last Refreshed: $last_refreshed | Output Size: $output_size | Time Zone: $time_zone"
 
-        # INSERT="INSERT INTO 'Meta Data' (Information,Symbol,'Last Refreshed','Output Size','Time Zone') VALUES ('$information','$sym','$last_refreshed','$output_size','$time_zone');"
-        # sqlite3 assignment.db "$INSERT"
-        # echo "$INSERT"   
+        INSERT="INSERT INTO 'Meta Data' (Information,Symbol,'Last Refreshed','Output Size','Time Zone') VALUES ('$information','$sym','$last_refreshed','$output_size','$time_zone');"
+        sqlite3 assignment.db "$INSERT"
+        echo "$INSERT"   
 
         #length3=$(jq -r '."Time Series (Daily)" | length' daily.json)    
         #echo $length3
@@ -77,7 +77,7 @@ saveDailyData() {
             if [[ $dow -ge 2 ]] && [[ 5 -ge $dow ]]
             then
                 #echo "Working Day $days - $dow"
-                while [ $w -le 2 ] #add 100
+                while [ $w -le 100 ] #add 100
                 do
                     # echo $days
                     dayresult=$(echo $(jq -r -c '."Time Series (Daily)"."'$days'"' daily.json))
@@ -96,9 +96,9 @@ saveDailyData() {
                         echo "Time Series (Daily)"
                         echo "Day: $days | Opening Price: $open | High Price: $high | Low Price: $low | Close Price: $close | Volume: $volume"
 
-                        # INSERT2="INSERT INTO 'Time Series (Daily)' (Day,Open,High,Low,Close,Volume) VALUES ('$days','$open','$high','$low','$close','$volume');"
-                        # sqlite3 assignment.db "$INSERT2"
-                        # echo "$INSERT2"  
+                        INSERT2="INSERT INTO 'Time Series (Daily)' (Day,Open,High,Low,Close,Volume) VALUES ('$days','$open','$high','$low','$close','$volume');"
+                        sqlite3 assignment.db "$INSERT2"
+                        echo "$INSERT2"  
 
                     fi
                     ((w++))
