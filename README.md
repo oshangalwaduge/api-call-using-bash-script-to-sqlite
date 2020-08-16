@@ -38,5 +38,8 @@ Close float (23),
 Volume integer (255)
 );
 
+# Make the script executable
+chmod u+x assignment.sh
+
 # Create cron job for to run at every 2 hours
 0 */2 * * * /root/new.sh
