@@ -45,7 +45,7 @@ getCompanyData() {
 saveDailyData() {
     length2=$(jq '.[] | length' matches.json)
     #echo $length2
-    for (( j=0; j<1; j++ ))
+    for (( j=0; j<1; j++ )) #add length2
     do
         symbol=$(jq -r '.bestMatches['$j']."1. symbol"' matches.json)
         echo $j
@@ -59,15 +59,25 @@ saveDailyData() {
         output_size=$(jq -r '."Meta Data"."4. Output Size"' daily.json)
         time_zone=$(jq -r '."Meta Data"."5. Time Zone"' daily.json)
 
-        #echo $information $sym $last_refreshed $output_size $time_zone
-
-        # INSERT='INSERT INTO "Meta Data" (Information,Symbol,"Last Refreshed","Output Size","Time Zone") VALUES ('$information','$sym','$last_refreshed','$output_size','$time_zone');'
+        # INSERT="INSERT INTO 'Meta Data' (Information,Symbol,'Last Refreshed','Output Size','Time Zone') VALUES ('$information','$sym','$last_refreshed','$output_size','$time_zone');"
         # sqlite3 assignment.db "$INSERT"
+        # echo "$INSERT"   
 
-        INSERT="\"INSERT INTO 'Meta Data' (Information,Symbol,'Last Refreshed','Output Size','Time Zone') VALUES ('$information','$sym','$last_refreshed','$output_size','$time_zone');\""
-        # INSERT=$(echo\" INSERT INTO 'Meta Data' (Information,Symbol,'Last Refreshed','Output Size','Time Zone') VALUES ($information,$sym,$last_refreshed,$output_size,$time_zone);\")
-        sqlite3 assignment.db "$INSERT"
-        echo $INSERT        
+        length3=$(jq -r '."Time Series (Daily)" | length' daily.json)    
+        #echo $length3
+        for (( k=2; k<102; k++ ))
+        do
+            dby=$(date -d '-'$k' day' '+%Y-%m-%d')
+            dow=$(date -d $dby +"%u")
+            if (($dow >= 2 && 5 >= $dow))
+            # echo $dby
+        done
+
+        # dby=$(date -d '-2 day' '+%Y-%m-%d')
+        # echo $dby
+        # lddetails=$(jq -c '."Time Series (Daily)"."2020-08-14"' daily.json)
+        # echo $lddetails
+
 
         #sleep 15
         #echo "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=$symbol&apikey=$API_KEY"
