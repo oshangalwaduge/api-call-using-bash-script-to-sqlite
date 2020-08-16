@@ -26,7 +26,6 @@ getCompanyData() {
         
         if [ $(echo "$match_score>$checking_value" | bc) -ne 0 ]; then
             #echo "Higher"
-            #object=$(echo $json | jq -r '.bestMatches['$i']')
             filtered=$(echo $json | jq -r '.bestMatches['$i']')
             all+=$(echo $filtered"," )
             
@@ -45,7 +44,7 @@ getCompanyData() {
 saveDailyData() {
     length2=$(jq '.[] | length' matches.json)
     #echo $length2
-    for (( j=0; j<1; j++ )) #add length2
+    for (( j=0; j<$length2; j++ )) #add length2
     do
         symbol=$(jq -r '.bestMatches['$j']."1. symbol"' matches.json)
         echo $j
@@ -59,28 +58,55 @@ saveDailyData() {
         output_size=$(jq -r '."Meta Data"."4. Output Size"' daily.json)
         time_zone=$(jq -r '."Meta Data"."5. Time Zone"' daily.json)
 
-        # INSERT="INSERT INTO 'Meta Data' (Information,Symbol,'Last Refreshed','Output Size','Time Zone') VALUES ('$information','$sym','$last_refreshed','$output_size','$time_zone');"
-        # sqlite3 assignment.db "$INSERT"
-        # echo "$INSERT"   
+        INSERT="INSERT INTO 'Meta Data' (Information,Symbol,'Last Refreshed','Output Size','Time Zone') VALUES ('$information','$sym','$last_refreshed','$output_size','$time_zone');"
+        sqlite3 assignment.db "$INSERT"
+        echo "$INSERT"   
 
-        length3=$(jq -r '."Time Series (Daily)" | length' daily.json)    
+        #length3=$(jq -r '."Time Series (Daily)" | length' daily.json)    
         #echo $length3
-        for (( k=2; k<102; k++ ))
+        k=2
+        w=1
+
+        while [ $k -le 200 ]
         do
-            dby=$(date -d '-'$k' day' '+%Y-%m-%d')
-            dow=$(date -d $dby +"%u")
-            if (($dow >= 2 && 5 >= $dow))
-            # echo $dby
+            days=$(date -d '-'$k' day' '+%Y-%m-%d')
+            dow=$(date -d $days +"%u")
+            # echo $k
+            # echo $days
+            # echo $dow
+            if [[ $dow -ge 2 ]] && [[ 5 -ge $dow ]]
+            then
+                #echo "Working Day $days - $dow"
+                while [ $w -le 2 ] #add 100
+                do
+                    # echo $days
+                    dayresult=$(echo $(jq -r -c '."Time Series (Daily)"."'$days'"' daily.json))
+                    if [[ $dayresult != null ]]
+                    then
+                        # echo $days
+                        # echo $dayresult
+
+                        open=$(jq -r -c '."Time Series (Daily)"."'$days'"."1. open"' daily.json)
+                        high=$(jq -r -c '."Time Series (Daily)"."'$days'"."2. high"' daily.json)
+                        low=$(jq -r -c '."Time Series (Daily)"."'$days'"."3. low"' daily.json)
+                        close=$(jq -r -c '."Time Series (Daily)"."'$days'"."4. close"' daily.json)
+                        volume=$(jq -r -c '."Time Series (Daily)"."'$days'"."5. volume"' daily.json)
+                        # echo $open $high $low $close $volume
+
+
+
+                        INSERT2="INSERT INTO 'Time Series (Daily)' (Day,Open,High,Low,Close,Volume) VALUES ('$days','$open','$high','$low','$close','$volume');"
+                        sqlite3 assignment.db "$INSERT2"
+                        echo "$INSERT2"  
+
+                    fi
+                    ((w++))
+                    break
+                done
+            fi
+            ((k++))  
         done
-
-        # dby=$(date -d '-2 day' '+%Y-%m-%d')
-        # echo $dby
-        # lddetails=$(jq -c '."Time Series (Daily)"."2020-08-14"' daily.json)
-        # echo $lddetails
-
-
-        #sleep 15
-        #echo "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=$symbol&apikey=$API_KEY"
+        sleep 15
     done
 
 }
@@ -89,4 +115,3 @@ saveDailyData() {
 #### MAIN SCRIPT ####
 getCompanyData $URL
 saveDailyData
-#echo $length
