@@ -27,10 +27,7 @@ getCompanyData() {
         if [ $(echo "$match_score>$checking_value" | bc) -ne 0 ]; then
             #echo "Higher"
             filtered=$(echo $json | jq -r '.bestMatches['$i']')
-            all+=$(echo $filtered"," )
-            
-            
-            
+            all+=$(echo $filtered"," )   
         else
             echo "Lower"
         fi
@@ -47,8 +44,8 @@ saveDailyData() {
     for (( j=0; j<$length2; j++ )) #add length2
     do
         symbol=$(jq -r '.bestMatches['$j']."1. symbol"' matches.json)
-        echo $j
-        echo $symbol
+        #echo $j
+        #echo $symbol
 
         curl -s $URL2$symbol | jq '.' > daily.json
 
@@ -58,9 +55,12 @@ saveDailyData() {
         output_size=$(jq -r '."Meta Data"."4. Output Size"' daily.json)
         time_zone=$(jq -r '."Meta Data"."5. Time Zone"' daily.json)
 
-        INSERT="INSERT INTO 'Meta Data' (Information,Symbol,'Last Refreshed','Output Size','Time Zone') VALUES ('$information','$sym','$last_refreshed','$output_size','$time_zone');"
-        sqlite3 assignment.db "$INSERT"
-        echo "$INSERT"   
+        echo "Meta Data"
+        echo "Information: $information | Symbol: $sym | Last Refreshed: $last_refreshed | Output Size: $output_size | Time Zone: $time_zone"
+
+        # INSERT="INSERT INTO 'Meta Data' (Information,Symbol,'Last Refreshed','Output Size','Time Zone') VALUES ('$information','$sym','$last_refreshed','$output_size','$time_zone');"
+        # sqlite3 assignment.db "$INSERT"
+        # echo "$INSERT"   
 
         #length3=$(jq -r '."Time Series (Daily)" | length' daily.json)    
         #echo $length3
@@ -93,11 +93,12 @@ saveDailyData() {
                         volume=$(jq -r -c '."Time Series (Daily)"."'$days'"."5. volume"' daily.json)
                         # echo $open $high $low $close $volume
 
+                        echo "Time Series (Daily)"
+                        echo "Day: $days | Opening Price: $open | High Price: $high | Low Price: $low | Close Price: $close | Volume: $volume"
 
-
-                        INSERT2="INSERT INTO 'Time Series (Daily)' (Day,Open,High,Low,Close,Volume) VALUES ('$days','$open','$high','$low','$close','$volume');"
-                        sqlite3 assignment.db "$INSERT2"
-                        echo "$INSERT2"  
+                        # INSERT2="INSERT INTO 'Time Series (Daily)' (Day,Open,High,Low,Close,Volume) VALUES ('$days','$open','$high','$low','$close','$volume');"
+                        # sqlite3 assignment.db "$INSERT2"
+                        # echo "$INSERT2"  
 
                     fi
                     ((w++))
