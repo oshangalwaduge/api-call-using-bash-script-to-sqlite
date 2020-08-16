@@ -61,21 +61,13 @@ saveDailyData() {
 
         #echo $information $sym $last_refreshed $output_size $time_zone
 
-#         sqlite3 assignment.db insert into '"Meta Data" ("Information","Symbol","Last Refreshed","Output Size","Time Zone") \
-#         values ('$information','$sym','$last_refreshed','$output_size','$time_zone');'
+        # INSERT='INSERT INTO "Meta Data" (Information,Symbol,"Last Refreshed","Output Size","Time Zone") VALUES ('$information','$sym','$last_refreshed','$output_size','$time_zone');'
+        # sqlite3 assignment.db "$INSERT"
 
-#     INSERT="\"INSERT INTO keys ('date','chan','key','name','desc','ser','ep','cat') VALUES('xxx','xxx','xxxx','xxxx','xxxxx.','xxx','xxx','xxxx');\""      
-# echo $sql
-# sqlite3 mydb.db "$sql"
-
-        INSERT='INSERT INTO "Meta Data" (Information,Symbol,"Last Refreshed","Output Size","Time Zone") VALUES ('$information','$sym','$last_refreshed','$output_size','$time_zone');'
-        sqlite3 assignment.db \ $INSERT
-
-
-        # sqlite3 tasks.db "insert into todo (project,duedate,status,description) \
-        #  values (\"$Proj\",$Due,\"$Stat\",\"$Descr\");"
-
-        
+        INSERT="\"INSERT INTO 'Meta Data' (Information,Symbol,'Last Refreshed','Output Size','Time Zone') VALUES ('$information','$sym','$last_refreshed','$output_size','$time_zone');\""
+        # INSERT=$(echo\" INSERT INTO 'Meta Data' (Information,Symbol,'Last Refreshed','Output Size','Time Zone') VALUES ($information,$sym,$last_refreshed,$output_size,$time_zone);\")
+        sqlite3 assignment.db "$INSERT"
+        echo $INSERT        
 
         #sleep 15
         #echo "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=$symbol&apikey=$API_KEY"
