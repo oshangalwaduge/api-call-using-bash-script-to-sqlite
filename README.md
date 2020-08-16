@@ -13,12 +13,9 @@ Endpoint details
 Note: You may need to register with the https://www.alphavantage.co/support/#api-key to access the APIs.
 
 API Methods
-● Search Company:
-Eg: https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=BA&apikey=demo
-● Daily Stock:
-Eg: ttps://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=IBM&apikey=demo
-For more information about APIs refer to the official documentation at
-https://www.alphavantage.co/documentation/
+>>Search Company: Eg: https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=BA&apikey=demo
+>>>Daily Stock: Eg: ttps://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=IBM&apikey=demo
+For more information about APIs refer to the official documentation at: https://www.alphavantage.co/documentation/
 
 # Create the database
 sqlite3 assignment.db
