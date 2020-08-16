@@ -11,6 +11,7 @@ need to look at our own databases to check existing information, Validity period
 
 Endpoint details
 Note: You may need to register with the https://www.alphavantage.co/support/#api-key to access the APIs.
+
 API Methods
 ● Search Company:
 Eg: https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=BA&apikey=demo
