@@ -28,8 +28,8 @@ getCompanyData() {
             #echo "Higher"
             filtered=$(echo $json | jq -r '.bestMatches['$i']')
             all+=$(echo $filtered"," )   
-        else
-            echo "Lower"
+        # else
+        #     echo "Lower"
         fi
     done
     echo '{"bestMatches": ['$all']}' | perl -pe 's/.*\K,/ /' > matches.json
@@ -114,5 +114,7 @@ saveDailyData() {
 
 
 #### MAIN SCRIPT ####
+echo "Starting the script..."
 getCompanyData $URL
 saveDailyData
+echo "Script finished..."
