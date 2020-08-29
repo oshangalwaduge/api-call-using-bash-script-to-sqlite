@@ -1,4 +1,4 @@
-# practice-shell
+# API Call Using Bash Shell Script And Save the Data on SQLite3 Database
 
 Write a shell script that pulls data from the endpoint described below and prints it in console, while storing data in an SQLite database. Your solution should be generalized as much as possible to work with any 3rd party endpoint.
 
